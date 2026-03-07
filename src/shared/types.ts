@@ -8,3 +8,20 @@ export interface LocaldevLink {
 export interface LocaldevConfig {
   links: Record<string, LocaldevLink>;
 }
+
+export type ExportCondition =
+  | "import"
+  | "require"
+  | "default"
+  | "node"
+  | "browser"
+  | "module"
+  | "types"
+  | "development"
+  | "production";
+
+export interface ResolveLinkedPackageOptions {
+  packageDir: string;
+  subpath: string;
+  conditions: ExportCondition[];
+}

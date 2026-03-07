@@ -1,0 +1,4 @@
+{
+  "name": "@test/exports-string",
+  "exports": "./dist/index.mjs"
+}

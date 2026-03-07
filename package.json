@@ -53,6 +53,7 @@
     "@clack/prompts": "^0.10.0",
     "citty": "^0.1.6",
     "execa": "^9.5.2",
+    "resolve.exports": "^2.0.3",
     "unplugin": "^2.3.2"
   },
   "devDependencies": {

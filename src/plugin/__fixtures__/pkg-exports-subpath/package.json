@@ -1,0 +1,17 @@
+{
+  "name": "@test/exports-subpath",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./theme": {
+      "import": "./dist/theme.mjs",
+      "require": "./dist/theme.cjs"
+    },
+    "./components/*": {
+      "import": "./dist/components/*.mjs",
+      "require": "./dist/components/*.cjs"
+    }
+  }
+}
