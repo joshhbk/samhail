@@ -32,19 +32,28 @@ export function parseSpecifier(
   return null;
 }
 
+async function loadActiveConfig(
+  cwd: string,
+): Promise<LocaldevConfig | null> {
+  const config = await readConfig(cwd);
+  if (!config) return null;
+  const alive = await isHeartbeatAlive(cwd);
+  return alive ? config : null;
+}
+
 export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
   const cwd = options?.cwd ?? process.cwd();
   let config: LocaldevConfig | null = null;
+  const configReady = loadActiveConfig(cwd).then((c) => {
+    config = c;
+  });
 
   return {
     name: "localdev",
+    enforce: "pre",
 
     async buildStart() {
-      config = await readConfig(cwd);
-      if (config) {
-        const alive = await isHeartbeatAlive(cwd);
-        if (!alive) config = null;
-      }
+      await configReady;
     },
 
     resolveId(id) {
@@ -79,6 +88,26 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
 
     load(id) {
       return readFileSync(id, "utf-8");
+    },
+
+    vite: {
+      // Exclude linked packages from dep pre-bundling so our resolveId runs
+      async config() {
+        await configReady;
+        if (!config) return;
+        return {
+          optimizeDeps: {
+            exclude: Object.keys(config.links),
+          },
+        };
+      },
+      // Watch linked package dist directories so HMR picks up rebuilds
+      configureServer(server) {
+        if (!config) return;
+        for (const link of Object.values(config.links)) {
+          server.watcher.add(resolve(cwd, link.path, "dist"));
+        }
+      },
     },
   };
 });

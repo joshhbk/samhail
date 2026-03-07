@@ -65,6 +65,29 @@ export async function discoverLocalPackage(
       const pkg = await readPackageJson(candidate);
       if (pkg?.name === name && !matches.includes(candidate)) {
         matches.push(candidate);
+        continue;
+      }
+
+      // Check one level deeper (handles packages/ui-kit, libs/core, etc.)
+      let subEntries: string[];
+      try {
+        subEntries = await readdir(candidate);
+      } catch {
+        continue;
+      }
+      for (const subEntry of subEntries) {
+        const subCandidate = join(candidate, subEntry);
+        if (resolve(subCandidate) === resolve(cwd)) continue;
+        try {
+          const ss = await stat(subCandidate);
+          if (!ss.isDirectory()) continue;
+        } catch {
+          continue;
+        }
+        const subPkg = await readPackageJson(subCandidate);
+        if (subPkg?.name === name && !matches.includes(subCandidate)) {
+          matches.push(subCandidate);
+        }
       }
     }
   }

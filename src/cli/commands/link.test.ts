@@ -94,6 +94,22 @@ describe("link helpers", () => {
       expect(results).toContain(uncle);
     });
 
+    it("finds matching package nested one level inside a sibling dir", async () => {
+      // Structure: grandparent/apps/consumer and grandparent/packages/ui-kit
+      const grandparent = await makeTempDir();
+      const consumer = join(grandparent, "apps", "consumer");
+      const nested = join(grandparent, "packages", "ui-kit");
+      await mkdir(consumer, { recursive: true });
+      await mkdir(nested, { recursive: true });
+      await writeFile(
+        join(nested, "package.json"),
+        JSON.stringify({ name: "@acme/ui" }),
+      );
+
+      const results = await discoverLocalPackage("@acme/ui", consumer);
+      expect(results).toContain(nested);
+    });
+
     it("returns empty array when no match", async () => {
       const parent = await makeTempDir();
       const consumer = join(parent, "consumer");
