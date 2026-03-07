@@ -2,6 +2,7 @@ import { defineCommand, runMain } from "citty";
 import { linkCommand } from "./commands/link.js";
 import { startCommand } from "./commands/start.js";
 import { statusCommand } from "./commands/status.js";
+import { unlinkCommand } from "./commands/unlink.js";
 
 const main = defineCommand({
   meta: {
@@ -14,6 +15,7 @@ const main = defineCommand({
     link: linkCommand,
     start: startCommand,
     status: statusCommand,
+    unlink: unlinkCommand,
   },
 });
 
