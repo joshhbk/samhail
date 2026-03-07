@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createUnplugin } from "unplugin";
 import { readConfig } from "../shared/config.js";
@@ -61,6 +62,23 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
         subpath: parsed.subpath,
         conditions: DEFAULT_CONDITIONS,
       });
+    },
+
+    // esbuild: unplugin's esbuild adapter puts resolved paths into the plugin's
+    // namespace, so esbuild won't auto-load them from disk. This load hook reads
+    // the file contents for paths we resolved. Other bundlers ignore loadInclude
+    // returning false and skip this entirely.
+    loadInclude(id) {
+      if (!config) return false;
+      const linkedNames = Object.keys(config.links);
+      return linkedNames.some(
+        (name) =>
+          id.startsWith(resolve(cwd, config!.links[name].path)),
+      );
+    },
+
+    load(id) {
+      return readFileSync(id, "utf-8");
     },
   };
 });
