@@ -60,11 +60,16 @@ export const unlinkCommand = defineCommand({
       process.exit(0);
     }
 
+    // Save to history before removing
+    config!.history = config!.history ?? {};
+    config!.history[selectedName] = config!.links[selectedName];
+
     delete config!.links[selectedName];
 
     const remaining = Object.keys(config!.links).length;
+    const hasHistory = Object.keys(config!.history).length > 0;
 
-    if (remaining === 0) {
+    if (remaining === 0 && !hasHistory) {
       await unlink(getConfigPath(cwd));
       p.outro(
         `Unlinked ${selectedName}. No packages remain \u2014 removed .localdev.json.`,

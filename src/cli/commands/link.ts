@@ -272,10 +272,10 @@ export const linkCommand = defineCommand({
     }
 
     const config: LocaldevConfig = existingConfig ?? { links: {} };
-    config.links[selectedDep] = {
-      path: relativePath,
-      dev: devCommand,
-    };
+    const linkEntry = { path: relativePath, dev: devCommand };
+    config.links[selectedDep] = linkEntry;
+    config.history = config.history ?? {};
+    config.history[selectedDep] = linkEntry;
     await writeConfig(cwd, config);
 
     p.outro(`Linked ${selectedDep} → ${relativePath}`);

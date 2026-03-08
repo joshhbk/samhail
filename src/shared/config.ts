@@ -5,17 +5,28 @@ import type { LocaldevConfig } from "./types.js";
 
 const CONFIG_FILENAME = ".localdev.json";
 
+export function isLocaldevLink(link: unknown): boolean {
+  return (
+    typeof link === "object" &&
+    link !== null &&
+    typeof (link as Record<string, unknown>).path === "string" &&
+    typeof (link as Record<string, unknown>).dev === "string"
+  );
+}
+
+function isLinkRecord(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  return Object.values(value as Record<string, unknown>).every(isLocaldevLink);
+}
+
 function isLocaldevConfig(value: unknown): value is LocaldevConfig {
   if (typeof value !== "object" || value === null) return false;
   const obj = value as Record<string, unknown>;
-  if (typeof obj.links !== "object" || obj.links === null) return false;
-  return Object.values(obj.links as Record<string, unknown>).every(
-    (link) =>
-      typeof link === "object" &&
-      link !== null &&
-      typeof (link as Record<string, unknown>).path === "string" &&
-      typeof (link as Record<string, unknown>).dev === "string",
-  );
+  if (!isLinkRecord(obj.links)) return false;
+  if ("history" in obj && obj.history !== undefined) {
+    if (!isLinkRecord(obj.history)) return false;
+  }
+  return true;
 }
 
 export function getConfigPath(projectRoot: string): string {

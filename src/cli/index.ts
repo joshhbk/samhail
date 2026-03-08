@@ -1,5 +1,6 @@
 import { defineCommand, runMain } from "citty";
 import { linkCommand } from "./commands/link.js";
+import { relinkCommand } from "./commands/relink.js";
 import { startCommand } from "./commands/start.js";
 import { statusCommand } from "./commands/status.js";
 import { tsconfigCommand } from "./commands/tsconfig.js";
@@ -14,6 +15,7 @@ const main = defineCommand({
   },
   subCommands: {
     link: linkCommand,
+    relink: relinkCommand,
     start: startCommand,
     status: statusCommand,
     tsconfig: tsconfigCommand,

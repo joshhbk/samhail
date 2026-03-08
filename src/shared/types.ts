@@ -7,6 +7,7 @@ export interface LocaldevLink {
 
 export interface LocaldevConfig {
   links: Record<string, LocaldevLink>;
+  history?: Record<string, LocaldevLink>;
 }
 
 export type ExportCondition =
