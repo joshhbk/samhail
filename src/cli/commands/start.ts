@@ -1,16 +1,15 @@
-import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import { removeHeartbeat, writeHeartbeat } from "../../shared/heartbeat.js";
 import type { HeartbeatManifest } from "../../shared/types.js";
-import { killAllWatchers, type WatcherProcess } from "../watcher.js";
+import { defineLocaldevCommand } from "../command.js";
+import { killAllWatchers, spawnWatcher, type WatcherProcess } from "../watcher.js";
 import {
   findMissingLinkedPackage,
   getLinkedPackageSpecs,
   getStartSessionState,
 } from "./start-helpers.js";
-import { spawnWatcher } from "../watcher.js";
 
-export const startCommand = defineCommand({
+export const startCommand = defineLocaldevCommand({
   meta: {
     name: "start",
     description: "Start dev watchers for all linked packages",
@@ -98,7 +97,13 @@ export const startCommand = defineCommand({
     };
 
     await refreshHeartbeat();
-    const heartbeatInterval = setInterval(refreshHeartbeat, 5000);
+    const heartbeatInterval = setInterval(async () => {
+      try {
+        await refreshHeartbeat();
+      } catch {
+        // Non-fatal: heartbeat refresh failure shouldn't crash the session
+      }
+    }, 5000);
 
     p.log.step(
       `Watching ${packageNames.length} package${packageNames.length === 1 ? "" : "s"}. Press Ctrl+C to stop.`,

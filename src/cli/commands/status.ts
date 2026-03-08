@@ -1,8 +1,8 @@
 import { access } from "node:fs/promises";
-import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import { readConfig } from "../../shared/config.js";
 import { getHeartbeatStatus } from "../../shared/heartbeat.js";
+import { defineLocaldevCommand } from "../command.js";
 
 export function formatUptime(startedAt: string, now: Date = new Date()): string {
   const totalSeconds = Math.floor(
@@ -18,7 +18,7 @@ export function formatUptime(startedAt: string, now: Date = new Date()): string 
   return `${seconds}s`;
 }
 
-export const statusCommand = defineCommand({
+export const statusCommand = defineLocaldevCommand({
   meta: {
     name: "status",
     description: "Show linked packages and session state",

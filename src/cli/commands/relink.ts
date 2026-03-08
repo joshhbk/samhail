@@ -1,14 +1,15 @@
 import { readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import { readConfig, writeConfig } from "../../shared/config.js";
+import { isJsonObject, parseJson } from "../../shared/json.js";
+import { defineLocaldevCommand } from "../command.js";
 
 async function readPackageName(dir: string): Promise<string | null> {
   try {
     const raw = await readFile(join(dir, "package.json"), "utf-8");
-    const pkg = JSON.parse(raw) as { name?: string };
-    return pkg.name ?? null;
+    const pkg = parseJson(raw, isJsonObject);
+    return typeof pkg?.name === "string" ? pkg.name : null;
   } catch {
     return null;
   }
@@ -32,7 +33,7 @@ async function validateCandidate(
   return null;
 }
 
-export const relinkCommand = defineCommand({
+export const relinkCommand = defineLocaldevCommand({
   meta: {
     name: "relink",
     description: "Restore all previously linked packages from history",

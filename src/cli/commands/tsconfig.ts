@@ -1,7 +1,7 @@
 import { join } from "node:path";
-import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import { readConfig } from "../../shared/config.js";
+import { defineLocaldevCommand } from "../command.js";
 import {
   buildPackageTargetIndex,
   DEFAULT_EXPORT_CONDITIONS,
@@ -65,7 +65,7 @@ export async function buildPathEntries(
   return paths;
 }
 
-export const tsconfigCommand = defineCommand({
+export const tsconfigCommand = defineLocaldevCommand({
   meta: {
     name: "tsconfig",
     description:

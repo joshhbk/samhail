@@ -34,11 +34,15 @@ export async function writeHeartbeat(
   projectRoot: string,
   manifest: HeartbeatManifest,
 ): Promise<void> {
-  await writeFile(
-    getHeartbeatPath(projectRoot),
-    JSON.stringify(manifest, null, 2) + "\n",
-    "utf-8",
-  );
+  try {
+    await writeFile(
+      getHeartbeatPath(projectRoot),
+      JSON.stringify(manifest, null, 2) + "\n",
+      "utf-8",
+    );
+  } catch (cause) {
+    throw new Error(`Failed to write ${HEARTBEAT_FILENAME}`, { cause });
+  }
 }
 
 export async function readHeartbeat(

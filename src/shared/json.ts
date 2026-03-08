@@ -1,3 +1,9 @@
+export function isJsonObject(
+  value: unknown,
+): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 export function parseJson<T>(
   raw: string,
   guard: (value: unknown) => value is T,

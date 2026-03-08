@@ -1,21 +1,13 @@
 import { unlink } from "node:fs/promises";
-import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import {
   getConfigPath,
   readConfig,
   writeConfig,
 } from "../../shared/config.js";
+import { cancelGuard, defineLocaldevCommand } from "../command.js";
 
-function cancelGuard<T>(value: T | symbol): T {
-  if (p.isCancel(value)) {
-    p.cancel("Operation cancelled.");
-    process.exit(0);
-  }
-  return value;
-}
-
-export const unlinkCommand = defineCommand({
+export const unlinkCommand = defineLocaldevCommand({
   meta: {
     name: "unlink",
     description: "Remove a linked package from .localdev.json",

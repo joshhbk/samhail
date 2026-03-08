@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { access } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { exports as resolveExports } from "resolve.exports";
+import { isJsonObject, parseJson } from "./json.js";
 import type { ExportCondition, ResolveLinkedPackageOptions } from "./types.js";
 
 type PackageManifest = Record<string, unknown>;
@@ -39,7 +40,7 @@ function stripDotSlash(path: string): string {
 function readPackageManifest(packageDir: string): PackageManifest | null {
   try {
     const raw = readFileSync(join(packageDir, "package.json"), "utf-8");
-    return JSON.parse(raw) as PackageManifest;
+    return parseJson(raw, isJsonObject);
   } catch {
     return null;
   }

@@ -48,9 +48,10 @@ export async function writeConfig(
   projectRoot: string,
   config: LocaldevConfig,
 ): Promise<void> {
-  await writeFile(
-    getConfigPath(projectRoot),
-    JSON.stringify(config, null, 2) + "\n",
-    "utf-8",
-  );
+  const configPath = getConfigPath(projectRoot);
+  try {
+    await writeFile(configPath, JSON.stringify(config, null, 2) + "\n", "utf-8");
+  } catch (cause) {
+    throw new Error(`Failed to write ${CONFIG_FILENAME}`, { cause });
+  }
 }

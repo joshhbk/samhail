@@ -1,7 +1,7 @@
 import { join, relative, resolve } from "node:path";
-import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import { readConfig, writeConfig } from "../../shared/config.js";
+import { cancelGuard, defineLocaldevCommand } from "../command.js";
 import {
   discoverLocalPackage,
   readConsumerDeps,
@@ -9,15 +9,7 @@ import {
   validateLinkedPackage,
 } from "./link-helpers.js";
 
-function cancelGuard<T>(value: T | symbol): T {
-  if (p.isCancel(value)) {
-    p.cancel("Operation cancelled.");
-    process.exit(0);
-  }
-  return value;
-}
-
-export const linkCommand = defineCommand({
+export const linkCommand = defineLocaldevCommand({
   meta: {
     name: "link",
     description: "Link a dependency to a local directory",

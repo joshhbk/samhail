@@ -1,5 +1,6 @@
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { isJsonObject } from "../../shared/json.js";
 
 interface PackageJson {
   name?: string;
@@ -11,7 +12,9 @@ interface PackageJson {
 async function readPackageJson(dir: string): Promise<PackageJson | null> {
   try {
     const raw = await readFile(join(dir, "package.json"), "utf-8");
-    return JSON.parse(raw) as PackageJson;
+    const parsed: unknown = JSON.parse(raw);
+    if (!isJsonObject(parsed)) return null;
+    return parsed as PackageJson;
   } catch {
     return null;
   }
