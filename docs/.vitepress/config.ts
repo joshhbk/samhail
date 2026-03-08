@@ -4,6 +4,7 @@ export default defineConfig({
   title: "localdev",
   description:
     "Zero-choreography local npm package development across repos",
+  base: "/localdev/",
   themeConfig: {
     nav: [{ text: "Guide", link: "/guide/" }],
     sidebar: [
