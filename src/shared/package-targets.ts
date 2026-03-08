@@ -104,7 +104,10 @@ export function deriveWatchDir(distPath: string): string | null {
   return parent === "." ? null : parent;
 }
 
-function createTarget(subpath: string, distPath: string): ResolvedPackageTarget {
+function createTarget(
+  subpath: string,
+  distPath: string,
+): ResolvedPackageTarget {
   const normalizedDistPath = normalizePackageRelativePath(distPath);
 
   return {
@@ -204,5 +207,7 @@ export function getPackageWatchDirs(
   const index = buildPackageTargetIndex(packageDir, conditions);
   if (!index) return [];
 
-  return [...new Set(Object.values(index).flatMap((target) => target.watchDir ?? []))];
+  return [
+    ...new Set(Object.values(index).flatMap((target) => target.watchDir ?? [])),
+  ];
 }

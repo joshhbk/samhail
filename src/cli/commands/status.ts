@@ -4,7 +4,10 @@ import { readConfig } from "../../shared/config.js";
 import { getHeartbeatStatus } from "../../shared/heartbeat.js";
 import { defineLocaldevCommand } from "../command.js";
 
-export function formatUptime(startedAt: string, now: Date = new Date()): string {
+export function formatUptime(
+  startedAt: string,
+  now: Date = new Date(),
+): string {
   const totalSeconds = Math.floor(
     (now.getTime() - new Date(startedAt).getTime()) / 1000,
   );
@@ -56,9 +59,7 @@ export const statusCommand = defineLocaldevCommand({
         pathLine += "  \u26A0 directory not found";
       }
 
-      p.log.message(
-        [name, pathLine, `Command:  ${link.dev}`].join("\n"),
-      );
+      p.log.message([name, pathLine, `Command:  ${link.dev}`].join("\n"));
     }
 
     const count = entries.length;

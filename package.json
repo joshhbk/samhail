@@ -45,25 +45,25 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "oxlint",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@clack/prompts": "^0.10.0",
-    "citty": "^0.1.6",
+    "@clack/prompts": "^1.1.0",
+    "citty": "^0.2.1",
     "execa": "^9.5.2",
     "resolve.exports": "^2.0.3",
-    "unplugin": "^2.3.2"
+    "unplugin": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.3.5",
-    "oxlint": "^0.16.6",
-    "prettier": "^3.5.3",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "keywords": [
     "local-development",

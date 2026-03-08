@@ -24,7 +24,12 @@ export function spawnWatcher(
     ...process.env,
     PATH: `${localBin}:${process.env.PATH ?? ""}`,
   };
-  const proc = execa({ shell: true, reject: false, cwd: callbacks.cwd, env })`${command}`;
+  const proc = execa({
+    shell: true,
+    reject: false,
+    cwd: callbacks.cwd,
+    env,
+  })`${command}`;
 
   const watcher: WatcherProcess = {
     name,
@@ -63,10 +68,7 @@ export async function killAllWatchers(
     setTimeout(resolve, timeoutMs);
   });
 
-  await Promise.race([
-    Promise.all(active.map((w) => w.process)),
-    deadline,
-  ]);
+  await Promise.race([Promise.all(active.map((w) => w.process)), deadline]);
 
   // SIGKILL any stragglers
   for (const w of active) {

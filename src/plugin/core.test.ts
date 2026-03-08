@@ -16,11 +16,7 @@ async function createTempProject(
     `localdev-test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
   );
   await mkdir(dir, { recursive: true });
-  await writeFile(
-    join(dir, ".localdev.json"),
-    JSON.stringify(config),
-    "utf-8",
-  );
+  await writeFile(join(dir, ".localdev.json"), JSON.stringify(config), "utf-8");
   if (options.heartbeat !== false) {
     await writeHeartbeat(dir, {
       pid: process.pid,

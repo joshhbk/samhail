@@ -80,9 +80,8 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
     loadInclude(id) {
       if (!rawConfig) return false;
       const linkedNames = Object.keys(rawConfig.links);
-      return linkedNames.some(
-        (name) =>
-          id.startsWith(resolve(cwd, rawConfig!.links[name].path)),
+      return linkedNames.some((name) =>
+        id.startsWith(resolve(cwd, rawConfig!.links[name].path)),
       );
     },
 

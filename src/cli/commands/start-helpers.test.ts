@@ -1,4 +1,4 @@
-import { mkdir, rm, utimes, writeFile } from "node:fs/promises";
+import { mkdir, rm, utimes } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
@@ -80,8 +80,6 @@ describe("start helpers", () => {
         makePackageSpec("@acme/present", present),
         makePackageSpec("@acme/missing", join(dir, "missing")),
       ]),
-    ).toEqual(
-      makePackageSpec("@acme/missing", join(dir, "missing")),
-    );
+    ).toEqual(makePackageSpec("@acme/missing", join(dir, "missing")));
   });
 });

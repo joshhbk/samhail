@@ -116,16 +116,12 @@ export function isHeartbeatFreshSync(projectRoot: string): boolean {
   }
 }
 
-export async function isHeartbeatAlive(
-  projectRoot: string,
-): Promise<boolean> {
+export async function isHeartbeatAlive(projectRoot: string): Promise<boolean> {
   const status = await getHeartbeatStatus(projectRoot);
   return status.state === "active";
 }
 
-export async function removeHeartbeat(
-  projectRoot: string,
-): Promise<void> {
+export async function removeHeartbeat(projectRoot: string): Promise<void> {
   try {
     await unlink(getHeartbeatPath(projectRoot));
   } catch {

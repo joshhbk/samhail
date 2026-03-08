@@ -50,7 +50,11 @@ export async function writeConfig(
 ): Promise<void> {
   const configPath = getConfigPath(projectRoot);
   try {
-    await writeFile(configPath, JSON.stringify(config, null, 2) + "\n", "utf-8");
+    await writeFile(
+      configPath,
+      JSON.stringify(config, null, 2) + "\n",
+      "utf-8",
+    );
   } catch (cause) {
     throw new Error(`Failed to write ${CONFIG_FILENAME}`, { cause });
   }

@@ -2,7 +2,11 @@ import * as p from "@clack/prompts";
 import { removeHeartbeat, writeHeartbeat } from "../../shared/heartbeat.js";
 import type { HeartbeatManifest } from "../../shared/types.js";
 import { defineLocaldevCommand } from "../command.js";
-import { killAllWatchers, spawnWatcher, type WatcherProcess } from "../watcher.js";
+import {
+  killAllWatchers,
+  spawnWatcher,
+  type WatcherProcess,
+} from "../watcher.js";
 import {
   findMissingLinkedPackage,
   getLinkedPackageSpecs,

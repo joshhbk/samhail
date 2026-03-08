@@ -52,14 +52,14 @@ Press `Ctrl+C` to stop.
 
 ## CLI commands
 
-| Command              | Description                                              |
-| -------------------- | -------------------------------------------------------- |
-| `localdev link`      | Link a dependency to a local directory                   |
-| `localdev unlink`    | Remove a linked package                                  |
-| `localdev relink`    | Restore previously linked packages from history          |
-| `localdev start`     | Start dev watchers for all linked packages               |
-| `localdev status`    | Show linked packages and session state                   |
-| `localdev tsconfig`  | Print tsconfig paths mapping linked packages to source   |
+| Command             | Description                                            |
+| ------------------- | ------------------------------------------------------ |
+| `localdev link`     | Link a dependency to a local directory                 |
+| `localdev unlink`   | Remove a linked package                                |
+| `localdev relink`   | Restore previously linked packages from history        |
+| `localdev start`    | Start dev watchers for all linked packages             |
+| `localdev status`   | Show linked packages and session state                 |
+| `localdev tsconfig` | Print tsconfig paths mapping linked packages to source |
 
 ## How it works
 

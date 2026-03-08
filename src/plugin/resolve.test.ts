@@ -15,9 +15,7 @@ describe("resolveLinkedPackage", () => {
       subpath: ".",
       conditions: importConditions,
     });
-    expect(result).toBe(
-      join(FIXTURES, "pkg-exports-string", "dist/index.mjs"),
-    );
+    expect(result).toBe(join(FIXTURES, "pkg-exports-string", "dist/index.mjs"));
   });
 
   it("resolves conditional exports for import", () => {
@@ -88,9 +86,7 @@ describe("resolveLinkedPackage", () => {
       subpath: ".",
       conditions: importConditions,
     });
-    expect(result).toBe(
-      join(FIXTURES, "pkg-module-only", "dist/index.mjs"),
-    );
+    expect(result).toBe(join(FIXTURES, "pkg-module-only", "dist/index.mjs"));
   });
 
   it("returns null for module field when require conditions", () => {

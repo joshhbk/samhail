@@ -1,4 +1,4 @@
-import { join, relative, resolve } from "node:path";
+import { relative, resolve } from "node:path";
 import * as p from "@clack/prompts";
 import { readConfig, writeConfig } from "../../shared/config.js";
 import { cancelGuard, defineLocaldevCommand } from "../command.js";
@@ -69,7 +69,7 @@ export const linkCommand = defineLocaldevCommand({
         selectedPath = cancelGuard(
           await p.text({
             message: `Enter the path to ${selectedDep}:`,
-            validate: (input) => {
+            validate: (input = "") => {
               if (!input.trim()) return "Path is required.";
               return undefined;
             },
@@ -83,7 +83,7 @@ export const linkCommand = defineLocaldevCommand({
       const manualPath = cancelGuard(
         await p.text({
           message: `No local copies of ${selectedDep} found nearby. Enter the path:`,
-          validate: (input) => {
+          validate: (input = "") => {
             if (!input.trim()) return "Path is required.";
             return undefined;
           },
@@ -137,7 +137,7 @@ export const linkCommand = defineLocaldevCommand({
         devCommand = cancelGuard(
           await p.text({
             message: "Enter the dev command:",
-            validate: (input) => {
+            validate: (input = "") => {
               if (!input.trim()) return "Command is required.";
               return undefined;
             },
@@ -151,7 +151,7 @@ export const linkCommand = defineLocaldevCommand({
       devCommand = cancelGuard(
         await p.text({
           message: "Enter the dev command:",
-          validate: (input) => {
+          validate: (input = "") => {
             if (!input.trim()) return "Command is required.";
             return undefined;
           },
@@ -176,11 +176,11 @@ export const linkCommand = defineLocaldevCommand({
     const linkEntry = { path: relativePath, dev: devCommand };
     const config = {
       links: {
-        ...(existingConfig?.links ?? {}),
+        ...existingConfig?.links,
         [selectedDep]: linkEntry,
       },
       history: {
-        ...(existingConfig?.history ?? {}),
+        ...existingConfig?.history,
         [selectedDep]: linkEntry,
       },
     };

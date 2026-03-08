@@ -10,8 +10,7 @@ const main = defineCommand({
   meta: {
     name: "localdev",
     version: "0.1.0",
-    description:
-      "Zero-choreography local npm package development across repos",
+    description: "Zero-choreography local npm package development across repos",
   },
   subCommands: {
     link: linkCommand,

@@ -19,9 +19,7 @@ export function defineLocaldevCommand(
       try {
         await originalRun?.(context);
       } catch (error) {
-        p.log.error(
-          error instanceof Error ? error.message : String(error),
-        );
+        p.log.error(error instanceof Error ? error.message : String(error));
         process.exit(1);
       }
     },

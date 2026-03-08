@@ -1,10 +1,6 @@
 import { unlink } from "node:fs/promises";
 import * as p from "@clack/prompts";
-import {
-  getConfigPath,
-  readConfig,
-  writeConfig,
-} from "../../shared/config.js";
+import { getConfigPath, readConfig, writeConfig } from "../../shared/config.js";
 import { cancelGuard, defineLocaldevCommand } from "../command.js";
 
 export const unlinkCommand = defineLocaldevCommand({

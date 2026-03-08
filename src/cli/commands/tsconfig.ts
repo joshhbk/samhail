@@ -101,8 +101,7 @@ export const tsconfigCommand = defineLocaldevCommand({
           packageCount++;
         }
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : String(error);
+        const message = error instanceof Error ? error.message : String(error);
         p.log.warn(`Skipping ${name}: ${message}`);
       }
     }

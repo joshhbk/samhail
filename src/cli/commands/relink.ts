@@ -87,7 +87,9 @@ export const relinkCommand = defineLocaldevCommand({
       p.outro("Nothing relinked. Use `localdev link` to link manually.");
       process.exit(1);
     } else {
-      p.outro(`Relinked ${restored.length} package${restored.length > 1 ? "s" : ""}`);
+      p.outro(
+        `Relinked ${restored.length} package${restored.length > 1 ? "s" : ""}`,
+      );
     }
   },
 });

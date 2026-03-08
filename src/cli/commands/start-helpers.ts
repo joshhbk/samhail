@@ -54,10 +54,7 @@ export async function getStartSessionState(
     };
   }
 
-  if (
-    heartbeatStatus.state === "stale" ||
-    heartbeatStatus.state === "dead"
-  ) {
+  if (heartbeatStatus.state === "stale" || heartbeatStatus.state === "dead") {
     return { state: "cleanup-stale" };
   }
 
