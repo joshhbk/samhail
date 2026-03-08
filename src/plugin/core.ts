@@ -62,7 +62,12 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
     enforce: "pre",
 
     async buildStart() {
-      rawConfig = await rawConfigReady;
+      // Re-read config each build so webpack/rspack watch mode picks up
+      // link/unlink changes. Vite handles this via server restarts instead.
+      rawConfig = await readConfig(cwd);
+      if (typeof this.addWatchFile === "function") {
+        this.addWatchFile(getConfigPath(cwd));
+      }
     },
 
     resolveId(id) {
@@ -121,12 +126,17 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
           }
         }
 
-        const restartServer = async (reason: string) => {
-          try {
-            rmSync(server.config.cacheDir, { recursive: true, force: true });
-          } catch {}
-          server.config.logger.info(reason, { timestamp: true });
-          await server.restart();
+        let restartTimer: ReturnType<typeof setTimeout> | null = null;
+        const restartServer = (reason: string) => {
+          if (restartTimer) clearTimeout(restartTimer);
+          restartTimer = setTimeout(async () => {
+            restartTimer = null;
+            try {
+              rmSync(server.config.cacheDir, { recursive: true, force: true });
+            } catch {}
+            server.config.logger.info(reason, { timestamp: true });
+            await server.restart();
+          }, 200);
         };
 
         // Watch .localdev.json for link/unlink changes.
