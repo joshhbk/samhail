@@ -1,53 +1,49 @@
-# How It Works
+# Under the Hood
 
-## Architecture
+## The two halves
 
-`localdev` has two runtime halves that communicate through a filesystem contract:
+The CLI and the bundler plugin never talk to each other directly. They communicate through two files:
 
 ```
-┌─────────────────┐                          ┌─────────────────┐
-│                 │    .localdev.json         │                 │
-│   CLI           │ ──────────────────────▶   │   Bundler       │
-│   (localdev     │                          │   Plugin        │
-│    start)       │    .localdev.lock         │   (unplugin)    │
-│                 │ ──────────────────────▶   │                 │
-└─────────────────┘                          └─────────────────┘
+ CLI                                Plugin
+ ───                                ──────
+ writes .localdev.json ──────────▶  reads config
+ writes .localdev.lock ──────────▶  checks heartbeat
 ```
 
-- The **CLI** writes `.localdev.json` (config) and `.localdev.lock` (heartbeat)
-- The **plugin** reads both files to decide whether and how to rewrite module resolution
-
-There is no shared runtime state, no sockets, and no IPC. The two halves are fully decoupled.
+No sockets, no IPC, no shared memory. The plugin reads files; the CLI writes them. That's the entire contract.
 
 ## Resolution
 
-When the bundler encounters an import of a linked package, the plugin:
+When your bundler hits an import of a linked package, the plugin:
 
-1. Checks if a session is active (heartbeat is fresh and the PID is alive)
-2. Looks up the package name in `.localdev.json`
-3. Reads the linked package's `package.json` to find its `exports` entry points
-4. Resolves the import to the corresponding file in the local package directory
+1. Checks the heartbeat (is the lock file fresh? is the PID alive?)
+2. Looks up the package in `.localdev.json`
+3. Reads the package's `exports` field from its local `package.json`
+4. Resolves the import to the local file path
 
-For example, if your app imports `@myorg/shared` and the package's `exports` field maps `.` to `./dist/index.js`, the plugin resolves the import to `../shared/dist/index.js` (relative to the linked path).
+So `import { thing } from "@myorg/shared"` resolves to something like `../shared/dist/index.js` — the real file on disk, not whatever's in `node_modules`.
+
+Subpath exports work too. `@myorg/shared/utils` resolves through the package's `exports["./utils"]` entry.
 
 ## Export conditions
 
-The plugin respects the `exports` field in the linked package's `package.json`, including conditional exports. By default it resolves using the `import`, `module`, and `default` conditions, matching standard ESM resolution.
+The plugin resolves using `import`, `module`, and `default` conditions by default, matching standard ESM resolution order. It uses the `resolve.exports` library for the actual resolution logic, so edge cases in the `exports` spec are handled correctly.
 
-Subpath exports (e.g., `@myorg/shared/utils`) are also supported — the plugin reads all export subpaths and resolves each one independently.
+## The heartbeat
 
-## Heartbeat
+The heartbeat exists to solve one specific problem: what happens when `localdev start` crashes?
 
-The heartbeat mechanism prevents stale config from affecting builds. Without it, a crashed `localdev start` session would leave `.localdev.json` pointing at local directories while no watcher is rebuilding them — leading to confusing stale-build errors.
+Without it, a crashed session leaves `.localdev.json` pointing at local directories while nothing is rebuilding them. Your bundler resolves stale files and you get confusing errors that have nothing to do with your code.
 
-The CLI writes `.localdev.lock` with the current PID and timestamp, and refreshes it every 5 seconds. The plugin checks that the file is recent and the process is alive before activating resolution. If either check fails, the plugin behaves as a no-op.
+The lock file is written on start and refreshed every 5 seconds. The plugin checks both the timestamp and whether the PID is alive. If either check fails, resolution falls back to normal `node_modules` behavior.
 
-## Vite integration
+## Vite-specific behavior
 
-The Vite plugin has deeper integration than the other bundler adapters:
+Vite gets more than just resolution rewriting:
 
-- **Config watching**: Restarts the Vite dev server when `.localdev.json` or `.localdev.lock` changes
-- **Cache clearing**: Clears Vite's module graph cache on restart to avoid stale resolutions
-- **Watch roots**: Adds linked package directories to Vite's file watcher so changes trigger HMR
+- **Config watching** — the dev server restarts when `.localdev.json` or `.localdev.lock` changes, so starting/stopping a session or linking a new package takes effect immediately.
+- **Cache clearing** — Vite's module graph cache is cleared on restart to avoid serving stale resolutions.
+- **Watch roots** — linked package directories are added to Vite's file watcher, so changes in the linked package trigger HMR in the consumer app.
 
-The other bundler adapters (Webpack, Rspack, esbuild, Rollup) provide the core resolution behavior but don't yet have equivalent lifecycle integration.
+The other bundler adapters (Webpack, Rspack, esbuild, Rollup) handle resolution but don't hook into their dev server lifecycle yet.

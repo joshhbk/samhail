@@ -2,20 +2,28 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   title: "localdev",
-  description:
-    "Zero-choreography local npm package development across repos",
+  description: "Local npm package development without the ceremony",
   base: "/localdev/",
+  head: [
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap",
+      },
+    ],
+  ],
   themeConfig: {
     nav: [{ text: "Guide", link: "/guide/" }],
     sidebar: [
       {
         text: "Guide",
         items: [
-          { text: "What is localdev?", link: "/guide/" },
+          { text: "Why localdev", link: "/guide/" },
           { text: "Getting Started", link: "/guide/getting-started" },
-          { text: "CLI Reference", link: "/guide/cli" },
-          { text: "Config Reference", link: "/guide/config" },
-          { text: "How It Works", link: "/guide/how-it-works" },
+          { text: "CLI", link: "/guide/cli" },
+          { text: "Config", link: "/guide/config" },
+          { text: "Under the Hood", link: "/guide/how-it-works" },
         ],
       },
     ],

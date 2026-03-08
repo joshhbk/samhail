@@ -1,0 +1,242 @@
+/*
+ * localdev docs theme
+ *
+ * Aesthetic: utilitarian, terminal-confident, warm.
+ * Lime accent on dark. Outfit body, JetBrains Mono code.
+ * No gradients, no fluff — just sharp type and strong contrast.
+ */
+
+:root {
+  /* Brand — lime/chartreuse */
+  --vp-c-brand-1: #c8ee44;
+  --vp-c-brand-2: #b5d83e;
+  --vp-c-brand-3: #9fbf30;
+  --vp-c-brand-soft: rgba(200, 238, 68, 0.12);
+
+  /* Typography */
+  --vp-font-family-base: "Outfit", system-ui, sans-serif;
+  --vp-font-family-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Layout */
+  --vp-sidebar-width: 240px;
+}
+
+/* ---------- Dark mode (default) ---------- */
+
+.dark {
+  --vp-c-bg: #0a0a0a;
+  --vp-c-bg-alt: #111113;
+  --vp-c-bg-soft: #161618;
+  --vp-c-bg-elv: #1a1a1d;
+
+  --vp-c-text-1: #e8e8e8;
+  --vp-c-text-2: #a0a0a0;
+  --vp-c-text-3: #666;
+
+  --vp-c-divider: #222;
+  --vp-c-gutter: #111;
+
+  --vp-code-bg: #131315;
+
+  --vp-c-brand-1: #c8ee44;
+  --vp-c-brand-2: #b5d83e;
+  --vp-c-brand-3: #9fbf30;
+  --vp-c-brand-soft: rgba(200, 238, 68, 0.08);
+}
+
+/* ---------- Light mode ---------- */
+
+:root:not(.dark) {
+  --vp-c-bg: #fafaf8;
+  --vp-c-bg-alt: #f2f2ef;
+  --vp-c-bg-soft: #eaeae6;
+  --vp-c-bg-elv: #fff;
+
+  --vp-c-text-1: #111;
+  --vp-c-text-2: #555;
+  --vp-c-text-3: #888;
+
+  --vp-c-divider: #ddd;
+  --vp-c-gutter: #eee;
+
+  --vp-code-bg: #f0f0ec;
+
+  --vp-c-brand-1: #5a7a00;
+  --vp-c-brand-2: #4a6600;
+  --vp-c-brand-3: #3d5500;
+  --vp-c-brand-soft: rgba(90, 122, 0, 0.08);
+}
+
+/* ---------- Global typography ---------- */
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.vp-doc h1 {
+  font-size: 2.2rem;
+  line-height: 1.15;
+}
+
+.vp-doc h2 {
+  font-size: 1.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--vp-c-divider);
+  margin-top: 2.5rem;
+}
+
+.vp-doc p {
+  line-height: 1.75;
+}
+
+/* Inline code */
+.vp-doc :not(pre) > code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.85em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-brand-1);
+  font-weight: 500;
+}
+
+:root:not(.dark) .vp-doc :not(pre) > code {
+  color: var(--vp-c-brand-1);
+}
+
+/* Code blocks */
+.vp-doc div[class*="language-"] {
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.dark .vp-doc div[class*="language-"] {
+  background: #0e0e10;
+}
+
+/* ---------- Hero overrides ---------- */
+
+.VPHero .name {
+  font-family: var(--vp-font-family-mono);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* Override the gradient clip on the hero name */
+.VPHero .clip {
+  background: var(--vp-c-brand-1) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+.VPHero .tagline {
+  font-size: 1.25rem !important;
+  font-weight: 400;
+  color: var(--vp-c-text-2);
+  max-width: 480px;
+}
+
+/* Hero action buttons */
+.VPHero .actions .VPButton.brand {
+  background: var(--vp-c-brand-1);
+  color: #0a0a0a;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+}
+
+.VPHero .actions .VPButton.brand:hover {
+  background: #d8f560;
+}
+
+.VPHero .actions .VPButton.alt {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* ---------- Feature cards ---------- */
+
+.VPFeature {
+  border: 1px solid var(--vp-c-divider) !important;
+  border-radius: 6px !important;
+  background: var(--vp-c-bg-alt) !important;
+  transition: border-color 0.2s ease;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1) !important;
+}
+
+.VPFeature .title {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.VPFeature .details {
+  color: var(--vp-c-text-2);
+  line-height: 1.6;
+}
+
+/* ---------- Sidebar ---------- */
+
+.VPSidebar .group .title {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--vp-c-text-3);
+}
+
+/* Active sidebar link */
+.VPSidebarItem.is-active > .item .link > .text {
+  color: var(--vp-c-brand-1);
+}
+
+/* ---------- Nav ---------- */
+
+.VPNavBar .title {
+  font-family: var(--vp-font-family-mono);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Tables ---------- */
+
+.vp-doc table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.vp-doc th {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--vp-c-text-3);
+  border-bottom: 2px solid var(--vp-c-divider);
+}
+
+.vp-doc td {
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* ---------- Content container ---------- */
+
+.vp-doc .custom-block {
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* Code group tabs */
+.vp-code-group .tabs label {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.8rem;
+}

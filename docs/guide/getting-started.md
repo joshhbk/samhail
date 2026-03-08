@@ -6,7 +6,7 @@
 npm install localdev --save-dev
 ```
 
-## Add the plugin to your bundler
+## Add the plugin
 
 ::: code-group
 
@@ -57,26 +57,24 @@ export default {
 
 :::
 
-## Link a local package
+Vite gets the deepest integration (config watching, cache clearing, HMR). The other adapters handle resolution but don't yet hook into their bundler's dev lifecycle.
+
+## Link a package
 
 ```bash
 npx localdev link
 ```
 
-This interactive command walks you through:
+You'll pick a dependency from your `package.json`, point it at a local directory, and choose a dev command. localdev auto-discovers matching packages in sibling and nearby directories so you usually don't have to type a path.
 
-1. Picking a dependency from your `package.json`
-2. Pointing it at a local directory (auto-discovered from nearby directories)
-3. Choosing a dev command (picked from the package's scripts)
+This writes a `.localdev.json` in your project root. Add it and `.localdev.lock` to `.gitignore`.
 
-The result is a `.localdev.json` file in your project root. Add it and `.localdev.lock` to your `.gitignore`.
-
-## Start dev watchers
+## Start
 
 ```bash
 npx localdev start
 ```
 
-This spawns the dev command for each linked package and keeps a heartbeat file so the bundler plugin knows the session is active. Your bundler will now resolve linked packages from their local directories.
+Spawns the dev command for each linked package. Your bundler now resolves those packages from their local directories instead of `node_modules`.
 
-Press `Ctrl+C` to stop.
+`Ctrl+C` to stop. The heartbeat file is cleaned up and the plugin goes back to being a no-op.

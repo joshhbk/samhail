@@ -2,19 +2,19 @@
 layout: home
 hero:
   name: localdev
-  tagline: Zero-choreography local npm package development across repos
+  tagline: Develop local npm packages against real consumer apps. No symlinks, no lockfile churn, no ceremony.
   actions:
     - theme: brand
       text: Get Started
       link: /guide/getting-started
     - theme: alt
-      text: How It Works
+      text: Under the Hood
       link: /guide/how-it-works
 features:
-  - title: No symlinks
-    details: Resolves linked packages at the bundler level. No npm link, no lockfile churn, no node_modules mutation.
-  - title: Any bundler
-    details: Works with Vite, Webpack, Rspack, esbuild, and Rollup via a single unplugin-based core.
-  - title: Safe by default
-    details: When localdev isn't running, the plugin is a no-op. Your builds behave exactly as they normally would.
+  - title: Bundler-level resolution
+    details: Your bundler resolves linked packages directly from local directories. No npm link, no node_modules mutation, no phantom dependency issues.
+  - title: Works with your stack
+    details: Vite, Webpack, Rspack, esbuild, Rollup. One plugin core, thin adapter per bundler.
+  - title: Safe no-op
+    details: Not running localdev? The plugin does nothing. Your builds are unaffected.
 ---

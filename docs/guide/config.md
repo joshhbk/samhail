@@ -1,8 +1,8 @@
-# Config Reference
+# Config
 
 ## `.localdev.json`
 
-Created by `localdev link`. This is the main config file that tells the bundler plugin which packages to resolve locally.
+Created by `localdev link`. The bundler plugin reads this to know what to resolve locally.
 
 ```json
 {
@@ -23,20 +23,22 @@ Created by `localdev link`. This is the main config file that tells the bundler 
 
 ### `links`
 
-Active linked packages. Each key is the npm package name, and the value contains:
+Active linked packages. Keys are npm package names.
 
-| Field  | Type     | Description                                           |
-| ------ | -------- | ----------------------------------------------------- |
-| `path` | `string` | Relative or absolute path to the local package directory |
-| `dev`  | `string` | Command to run for watching/rebuilding the package    |
+| Field  | Type     | Description                              |
+| ------ | -------- | ---------------------------------------- |
+| `path` | `string` | Path to the local package directory      |
+| `dev`  | `string` | Command to run for watching / rebuilding |
+
+Paths can be relative or absolute. Relative paths resolve from the project root.
 
 ### `history`
 
-Previously linked packages that were removed with `localdev unlink`. Used by `localdev relink` to restore packages without re-entering paths and commands. Same shape as `links`.
+Packages previously removed with `localdev unlink`. Same shape as `links`. Used by `localdev relink` to restore entries without going through the interactive flow again.
 
 ## `.localdev.lock`
 
-Written by `localdev start`. This heartbeat file tells the bundler plugin whether a session is active. It's updated every 5 seconds while the session is running.
+Written by `localdev start`, updated every 5 seconds. The plugin reads this to decide whether to activate.
 
 ```json
 {
@@ -47,9 +49,12 @@ Written by `localdev start`. This heartbeat file tells the bundler plugin whethe
 }
 ```
 
-The plugin considers a session active when:
-- The file exists and is valid JSON
-- The `updatedAt` timestamp is less than 10 seconds old
-- The process at `pid` is still alive
+The plugin considers a session active when all three hold:
 
-Both files should be added to `.gitignore`.
+1. The file exists and parses as valid JSON
+2. `updatedAt` is less than 10 seconds old
+3. The process at `pid` is still alive
+
+If any check fails, the plugin does nothing. This prevents stale config from silently breaking builds after a crash.
+
+Both files belong in `.gitignore`.

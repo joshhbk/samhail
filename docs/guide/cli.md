@@ -1,52 +1,35 @@
-# CLI Reference
+# CLI
 
-All commands are run via `npx localdev <command>` or `localdev <command>` if installed globally.
+All commands run via `npx localdev <command>`.
 
-## `localdev link`
+## `link`
 
-Link a dependency to a local directory.
+Interactive. Prompts you to pick a dependency, choose a local path, and select a dev command. Writes the result to `.localdev.json` and saves it to history.
 
-Interactive command that prompts you to:
-- Select a dependency from your `package.json`
-- Choose or enter the path to its local source directory
-- Pick a dev command from its `package.json` scripts or enter a custom one
+Auto-discovers matching packages in sibling directories and one level deeper, so for most project layouts you're just confirming a path rather than typing one.
 
-Writes the result to `.localdev.json` and saves it to link history.
+## `unlink`
 
-## `localdev unlink`
+Removes a linked package. The entry gets moved to history (not deleted) so `relink` can restore it later. If nothing remains and there's no history, the config file is deleted entirely.
 
-Remove a linked package from `.localdev.json`.
+## `relink`
 
-If only one package is linked, it's selected automatically. Otherwise you're prompted to choose. The removed entry is saved to history so it can be restored with `relink`.
+Restores packages from history. Validates that directories still exist and package names still match before restoring. Useful when you unlinked something temporarily and want it back without re-running the interactive `link` flow.
 
-If no packages remain and there's no history, the `.localdev.json` file is deleted.
+## `start`
 
-## `localdev relink`
+Spawns each linked package's dev command and writes a `.localdev.lock` heartbeat file, refreshed every 5 seconds. The bundler plugin uses this to know whether to activate.
 
-Restore previously linked packages from history.
+One session per project. If a stale lock file exists from a crashed session, it's cleaned up automatically.
 
-Finds all packages in the link history that aren't currently active, validates that their directories still exist and contain the expected `package.json`, and restores them to the active config.
+Runs until `Ctrl+C`. On shutdown, watchers are killed and the lock file is removed.
 
-## `localdev start`
+## `status`
 
-Start dev watchers for all linked packages.
+Shows whether a session is running (with PID and uptime) and lists all linked packages. Flags missing directories.
 
-For each linked package, spawns its `dev` command in the package's directory. Writes a `.localdev.lock` heartbeat file that the bundler plugin uses to detect whether a session is active.
+## `tsconfig`
 
-The session runs until you press `Ctrl+C`. On shutdown, all watchers are terminated and the heartbeat file is removed.
+Generates `compilerOptions.paths` entries that map linked packages to their source files. This gives your editor go-to-definition into the linked package's actual `.ts` files instead of compiled output.
 
-Only one session can run per project at a time.
-
-## `localdev status`
-
-Show linked packages and session state.
-
-Displays whether a session is running (with PID and uptime), and lists all linked packages with their paths and dev commands. Warns if a linked package's directory is missing.
-
-## `localdev tsconfig`
-
-Print tsconfig paths that map linked packages to their source files.
-
-Reads each linked package's `exports` field, resolves the dist entry points, and derives the corresponding source paths (e.g., `./dist/index.js` becomes `./src/index.ts`).
-
-Outputs a JSON object suitable for merging into your `tsconfig.json` `compilerOptions.paths`, giving your editor go-to-definition into the linked package's source.
+Reads each package's `exports` field and derives source paths from dist paths (e.g., `./dist/index.js` → `./src/index.ts`). Outputs JSON you can merge into your `tsconfig.json`.
