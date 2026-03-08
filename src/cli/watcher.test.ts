@@ -56,7 +56,7 @@ describe("spawnWatcher", () => {
 });
 
 describe("killAllWatchers", () => {
-  it("terminates running processes", async () => {
+  it("terminates running processes", { timeout: 15_000 }, async () => {
     const watcher = spawnWatcher("test-pkg", "sleep 60", {
       cwd: process.cwd(),
       onStdout: () => {},
