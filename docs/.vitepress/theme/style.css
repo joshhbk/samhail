@@ -2,16 +2,21 @@
  * localdev docs theme
  *
  * Aesthetic: utilitarian, terminal-confident, warm.
- * Lime accent on dark. Outfit body, JetBrains Mono code.
+ * Lime primary, peach secondary. Outfit body, JetBrains Mono code.
  * No gradients, no fluff — just sharp type and strong contrast.
  */
 
 :root {
-  /* Brand — lime/chartreuse */
+  /* Brand — lime primary */
   --vp-c-brand-1: #c8ee44;
   --vp-c-brand-2: #b5d83e;
   --vp-c-brand-3: #9fbf30;
   --vp-c-brand-soft: rgba(200, 238, 68, 0.12);
+
+  /* Peach secondary */
+  --c-peach: #fb923c;
+  --c-peach-dim: #f97316;
+  --c-peach-soft: rgba(251, 146, 60, 0.1);
 
   /* Typography */
   --vp-font-family-base: "Outfit", system-ui, sans-serif;
@@ -42,6 +47,10 @@
   --vp-c-brand-2: #b5d83e;
   --vp-c-brand-3: #9fbf30;
   --vp-c-brand-soft: rgba(200, 238, 68, 0.08);
+
+  --c-peach: #fb923c;
+  --c-peach-dim: #f97316;
+  --c-peach-soft: rgba(251, 146, 60, 0.08);
 }
 
 /* ---------- Light mode ---------- */
@@ -65,6 +74,10 @@
   --vp-c-brand-2: #4a6600;
   --vp-c-brand-3: #3d5500;
   --vp-c-brand-soft: rgba(90, 122, 0, 0.08);
+
+  --c-peach: #c2410c;
+  --c-peach-dim: #9a3412;
+  --c-peach-soft: rgba(194, 65, 12, 0.06);
 }
 
 /* ---------- Global typography ---------- */
@@ -88,26 +101,34 @@
   margin-top: 2.5rem;
 }
 
+.vp-doc h3 {
+  color: var(--c-peach);
+}
+
 .vp-doc p {
   line-height: 1.75;
 }
 
-/* Inline code */
+/* Strong text gets peach */
+.vp-doc strong {
+  color: var(--c-peach);
+  font-weight: 600;
+}
+
+/* ---------- Inline code — peach ---------- */
+
 .vp-doc :not(pre) > code {
   font-family: var(--vp-font-family-mono);
   font-size: 0.85em;
   padding: 2px 6px;
   border-radius: 4px;
-  background: var(--vp-c-bg-soft);
-  color: var(--vp-c-brand-1);
+  background: var(--c-peach-soft);
+  color: var(--c-peach);
   font-weight: 500;
 }
 
-:root:not(.dark) .vp-doc :not(pre) > code {
-  color: var(--vp-c-brand-1);
-}
+/* ---------- Code blocks ---------- */
 
-/* Code blocks */
 .vp-doc div[class*="language-"] {
   border-radius: 6px;
   border: 1px solid var(--vp-c-divider);
@@ -115,6 +136,16 @@
 
 .dark .vp-doc div[class*="language-"] {
   background: #0e0e10;
+}
+
+/* Code group tabs — peach active indicator */
+.vp-code-group .tabs label {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.8rem;
+}
+
+.vp-code-group .tabs label.active {
+  color: var(--c-peach);
 }
 
 /* ---------- Hero overrides ---------- */
@@ -125,7 +156,7 @@
   letter-spacing: -0.03em;
 }
 
-/* Override the gradient clip on the hero name */
+/* Hero name stays lime */
 .VPHero .clip {
   background: var(--vp-c-brand-1) !important;
   -webkit-background-clip: text !important;
@@ -139,7 +170,7 @@
   max-width: 480px;
 }
 
-/* Hero action buttons */
+/* Primary button — lime */
 .VPHero .actions .VPButton.brand {
   background: var(--vp-c-brand-1);
   color: #0a0a0a;
@@ -152,10 +183,16 @@
   background: #d8f560;
 }
 
+/* Secondary button — peach border */
 .VPHero .actions .VPButton.alt {
-  border: 1px solid var(--vp-c-divider);
+  border: 1px solid var(--c-peach);
+  color: var(--c-peach);
   border-radius: 4px;
   font-weight: 500;
+}
+
+.VPHero .actions .VPButton.alt:hover {
+  background: var(--c-peach-soft);
 }
 
 /* ---------- Feature cards ---------- */
@@ -164,11 +201,14 @@
   border: 1px solid var(--vp-c-divider) !important;
   border-radius: 6px !important;
   background: var(--vp-c-bg-alt) !important;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .VPFeature:hover {
-  border-color: var(--vp-c-brand-1) !important;
+  border-color: var(--c-peach) !important;
+  box-shadow: 0 0 0 1px var(--c-peach-soft);
 }
 
 .VPFeature .title {
@@ -176,6 +216,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: -0.01em;
+  color: var(--vp-c-brand-1);
 }
 
 .VPFeature .details {
@@ -194,9 +235,14 @@
   color: var(--vp-c-text-3);
 }
 
-/* Active sidebar link */
+/* Active sidebar link — lime */
 .VPSidebarItem.is-active > .item .link > .text {
   color: var(--vp-c-brand-1);
+}
+
+/* Sidebar link hover — peach */
+.VPSidebarItem > .item .link:hover > .text {
+  color: var(--c-peach) !important;
 }
 
 /* ---------- Nav ---------- */
@@ -205,6 +251,27 @@
   font-family: var(--vp-font-family-mono);
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+/* Nav links hover — peach */
+.VPNavBarMenuLink:hover .text {
+  color: var(--c-peach);
+}
+
+/* ---------- Links in content ---------- */
+
+.vp-doc a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.vp-doc a:hover {
+  color: var(--c-peach);
+  border-bottom-color: var(--c-peach);
 }
 
 /* ---------- Tables ---------- */
@@ -220,7 +287,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--vp-c-text-3);
+  color: var(--c-peach);
   border-bottom: 2px solid var(--vp-c-divider);
 }
 
@@ -228,15 +295,33 @@
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-/* ---------- Content container ---------- */
+/* ---------- Custom blocks ---------- */
 
 .vp-doc .custom-block {
   border-radius: 6px;
   border: 1px solid var(--vp-c-divider);
 }
 
-/* Code group tabs */
-.vp-code-group .tabs label {
-  font-family: var(--vp-font-family-mono);
-  font-size: 0.8rem;
+.vp-doc .custom-block.tip {
+  border-color: var(--c-peach);
+}
+
+/* ---------- Scrollbar ---------- */
+
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--vp-c-bg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #444;
 }
