@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { parseJson, writeJsonFile } from "./json.js";
 import type { HeartbeatManifest } from "./types.js";
 
-const HEARTBEAT_FILENAME = ".localdev.lock";
+const HEARTBEAT_FILENAME = ".samhail.lock";
 export const HEARTBEAT_STALENESS_THRESHOLD_MS = 10_000;
 
 export type HeartbeatStatus =

@@ -1,3 +1,3 @@
 import { unplugin } from "./core.js";
 
-export const localdev = unplugin.webpack;
+export const samhail = unplugin.webpack;

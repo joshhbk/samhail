@@ -2,7 +2,7 @@ import { access } from "node:fs/promises";
 import * as p from "@clack/prompts";
 import { readConfig } from "../../shared/config.js";
 import { getHeartbeatStatus } from "../../shared/heartbeat.js";
-import { defineLocaldevCommand } from "../command.js";
+import { defineSamhailCommand } from "../command.js";
 
 export function formatUptime(
   startedAt: string,
@@ -21,7 +21,7 @@ export function formatUptime(
   return `${seconds}s`;
 }
 
-export const statusCommand = defineLocaldevCommand({
+export const statusCommand = defineSamhailCommand({
   meta: {
     name: "status",
     description: "Show linked packages and session state",
@@ -29,7 +29,7 @@ export const statusCommand = defineLocaldevCommand({
   async run() {
     const cwd = process.cwd();
 
-    p.intro("localdev status");
+    p.intro("samhail status");
 
     // Session state
     const heartbeatStatus = await getHeartbeatStatus(cwd);

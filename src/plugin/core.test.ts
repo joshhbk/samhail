@@ -13,10 +13,10 @@ async function createTempProject(
 ) {
   const dir = join(
     tmpdir(),
-    `localdev-test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    `samhail-test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
   );
   await mkdir(dir, { recursive: true });
-  await writeFile(join(dir, ".localdev.json"), JSON.stringify(config), "utf-8");
+  await writeFile(join(dir, ".samhail.json"), JSON.stringify(config), "utf-8");
   if (options.heartbeat !== false) {
     await writeHeartbeat(dir, {
       pid: process.pid,
@@ -143,7 +143,7 @@ describe("unplugin resolveId", () => {
     });
     // Backdate the file mtime so the sync staleness check sees it as old
     const staleTime = new Date(Date.now() - 30_000);
-    await utimes(join(projectDir, ".localdev.lock"), staleTime, staleTime);
+    await utimes(join(projectDir, ".samhail.lock"), staleTime, staleTime);
 
     const plugin = await createPlugin(projectDir);
     const result = callResolveId(plugin, "@test/exports-conditional");
@@ -212,7 +212,7 @@ describe("unplugin resolveId", () => {
         join(projectDir, "linked", "build"),
         join(projectDir, "linked", "dist"),
         join(projectDir, "linked", "dist/components"),
-        join(projectDir, ".localdev.json"),
+        join(projectDir, ".samhail.json"),
       ]),
     );
   });

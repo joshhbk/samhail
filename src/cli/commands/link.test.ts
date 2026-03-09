@@ -15,7 +15,7 @@ describe("link helpers", () => {
   async function makeTempDir() {
     const dir = join(
       tmpdir(),
-      `localdev-link-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      `samhail-link-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
     await mkdir(dir, { recursive: true });
     dirs.push(dir);

@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import * as p from "@clack/prompts";
 import { readConfig } from "../../shared/config.js";
-import { defineLocaldevCommand } from "../command.js";
+import { defineSamhailCommand } from "../command.js";
 import {
   buildPackageTargetIndex,
   DEFAULT_EXPORT_CONDITIONS,
@@ -60,7 +60,7 @@ export async function buildPathEntries(
   return paths;
 }
 
-export const tsconfigCommand = defineLocaldevCommand({
+export const tsconfigCommand = defineSamhailCommand({
   meta: {
     name: "tsconfig",
     description:
@@ -69,7 +69,7 @@ export const tsconfigCommand = defineLocaldevCommand({
   async run() {
     const cwd = process.cwd();
 
-    p.intro("localdev tsconfig");
+    p.intro("samhail tsconfig");
 
     const config = await readConfig(cwd);
     const entries = config ? Object.entries(config.links) : [];

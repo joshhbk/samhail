@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-npm install localdev --save-dev
+npm install samhail --save-dev
 ```
 
 ## Add the plugin
@@ -12,67 +12,65 @@ npm install localdev --save-dev
 
 ```ts [Vite]
 // vite.config.ts
-import localdev from "localdev/vite";
+import samhail from "samhail/vite";
 
 export default defineConfig({
-  plugins: [localdev()],
+  plugins: [samhail()],
 });
 ```
 
 ```ts [Webpack]
 // webpack.config.js
-import localdev from "localdev/webpack";
+import samhail from "samhail/webpack";
 
 export default {
-  plugins: [localdev()],
+  plugins: [samhail()],
 };
 ```
 
 ```ts [Rspack]
 // rspack.config.js
-import localdev from "localdev/rspack";
+import samhail from "samhail/rspack";
 
 export default {
-  plugins: [localdev()],
+  plugins: [samhail()],
 };
 ```
 
 ```ts [esbuild]
-import localdev from "localdev/esbuild";
+import samhail from "samhail/esbuild";
 import esbuild from "esbuild";
 
 esbuild.build({
-  plugins: [localdev()],
+  plugins: [samhail()],
 });
 ```
 
 ```ts [Rollup]
 // rollup.config.js
-import localdev from "localdev/rollup";
+import samhail from "samhail/rollup";
 
 export default {
-  plugins: [localdev()],
+  plugins: [samhail()],
 };
 ```
 
 :::
 
-The Vite adapter has the deepest integration. It watches for config changes, clears the module cache, and adds linked package directories to the file watcher for HMR. The other adapters handle resolution but don't yet hook into their bundler's dev lifecycle.
-
 ## Link a package
 
 ```bash
-npx localdev link
+npx samhail link
 ```
 
-This walks you through picking a dependency from your `package.json`, pointing it at a local directory, and choosing a dev command. localdev looks for matching packages in sibling and nearby directories, so you usually won't need to type a path manually.
+This walks you through picking a dependency from your `package.json`, pointing it at a local directory, and choosing a dev command. samhail looks for matching packages in sibling and nearby directories, so you usually won't need to type a path manually.
 
-The result is a `.localdev.json` file in your project root. Add it and `.localdev.lock` to your `.gitignore`.
+The result is a `.samhail.json` file in your project root. Add it and `.samhail.lock` to your `.gitignore`.
 
 ## Start
 
 ```bash
-npx localdev start
+npx samhail start
 ```
 
 This spawns the dev command for each linked package. While it's running, the bundler plugin resolves those packages from their local directories instead of `node_modules`.

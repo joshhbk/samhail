@@ -1,4 +1,4 @@
-# Why localdev
+# Why samhail
 
 When you maintain an npm package used by another project, you often need to iterate on both at the same time. The usual approaches each have trade-offs:
 
@@ -6,7 +6,7 @@ When you maintain an npm package used by another project, you often need to iter
 - **Monorepo workspaces** require both projects to live in the same repo.
 - **`npm pack` + install** is reliable but requires a manual build-pack-install cycle on every change.
 
-`localdev` works at the bundler level instead. Rather than modifying `node_modules` or the lockfile, it has the bundler resolve specific packages from their local directories during development.
+`samhail` works at the bundler level instead. Rather than modifying `node_modules` or the lockfile, it has the bundler resolve specific packages from their local directories during development.
 
 There are two parts:
 

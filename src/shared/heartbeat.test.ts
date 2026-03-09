@@ -17,7 +17,7 @@ describe("heartbeat", () => {
   async function makeTempDir() {
     dir = join(
       tmpdir(),
-      `localdev-hb-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      `samhail-hb-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
     await mkdir(dir, { recursive: true });
     return dir;
@@ -29,9 +29,9 @@ describe("heartbeat", () => {
     }
   });
 
-  it("getHeartbeatPath resolves .localdev.lock in project root", () => {
+  it("getHeartbeatPath resolves .samhail.lock in project root", () => {
     expect(getHeartbeatPath("/some/project")).toBe(
-      join("/some/project", ".localdev.lock"),
+      join("/some/project", ".samhail.lock"),
     );
   });
 
@@ -45,7 +45,7 @@ describe("heartbeat", () => {
 
   it("getHeartbeatStatus returns invalid for malformed JSON", async () => {
     await makeTempDir();
-    await writeFile(join(dir, ".localdev.lock"), "not json{{{", "utf-8");
+    await writeFile(join(dir, ".samhail.lock"), "not json{{{", "utf-8");
     expect(await getHeartbeatStatus(dir)).toEqual({
       state: "invalid",
       manifest: null,
@@ -116,7 +116,7 @@ describe("heartbeat", () => {
     const staleTime = new Date(
       Date.now() - HEARTBEAT_STALENESS_THRESHOLD_MS - 5_000,
     );
-    await utimes(join(dir, ".localdev.lock"), staleTime, staleTime);
+    await utimes(join(dir, ".samhail.lock"), staleTime, staleTime);
     expect(isHeartbeatFreshSync(dir)).toBe(false);
   });
 

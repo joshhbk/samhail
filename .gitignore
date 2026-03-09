@@ -1,7 +1,7 @@
 node_modules/
 dist/
-.localdev.json
-.localdev.lock
+.samhail.json
+.samhail.lock
 *.tsbuildinfo
 docs/.vitepress/dist/
 docs/.vitepress/cache/

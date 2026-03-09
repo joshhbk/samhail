@@ -10,7 +10,7 @@ describe("config", () => {
   async function makeTempDir() {
     const dir = join(
       tmpdir(),
-      `localdev-config-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      `samhail-config-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
     await mkdir(dir, { recursive: true });
     dirs.push(dir);
@@ -55,7 +55,7 @@ describe("config", () => {
       const dir = await makeTempDir();
       const { writeFile } = await import("node:fs/promises");
       await writeFile(
-        join(dir, ".localdev.json"),
+        join(dir, ".samhail.json"),
         JSON.stringify({
           links: {},
           history: { bad: { path: 123 } },
@@ -70,7 +70,7 @@ describe("config", () => {
       const dir = await makeTempDir();
       const { writeFile } = await import("node:fs/promises");
       await writeFile(
-        join(dir, ".localdev.json"),
+        join(dir, ".samhail.json"),
         JSON.stringify({
           links: {},
           history: { pkg: { path: "../pkg" } },
@@ -111,7 +111,7 @@ describe("config", () => {
         history: { pkg: { path: "../pkg", dev: "dev" } },
       });
 
-      const raw = await readFile(join(dir, ".localdev.json"), "utf-8");
+      const raw = await readFile(join(dir, ".samhail.json"), "utf-8");
       expect(raw.endsWith("\n")).toBe(true);
       expect(() => JSON.parse(raw)).not.toThrow();
     });

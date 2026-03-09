@@ -1,3 +1,3 @@
 import { unplugin } from "./core.js";
 
-export const localdev = unplugin.esbuild;
+export const samhail = unplugin.esbuild;

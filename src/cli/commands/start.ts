@@ -1,7 +1,7 @@
 import * as p from "@clack/prompts";
 import { removeHeartbeat, writeHeartbeat } from "../../shared/heartbeat.js";
 import type { HeartbeatManifest } from "../../shared/types.js";
-import { defineLocaldevCommand } from "../command.js";
+import { defineSamhailCommand } from "../command.js";
 import {
   killAllWatchers,
   spawnWatcher,
@@ -13,7 +13,7 @@ import {
   getStartSessionState,
 } from "./start-helpers.js";
 
-export const startCommand = defineLocaldevCommand({
+export const startCommand = defineSamhailCommand({
   meta: {
     name: "start",
     description: "Start dev watchers for all linked packages",
@@ -21,7 +21,7 @@ export const startCommand = defineLocaldevCommand({
   async run() {
     const cwd = process.cwd();
 
-    p.intro("localdev start");
+    p.intro("samhail start");
 
     // 1. Read config
     const linkedPackages = await getLinkedPackageSpecs(cwd);
@@ -29,7 +29,7 @@ export const startCommand = defineLocaldevCommand({
       return {
         status: "error",
         message:
-          "No .localdev.json found or no links configured. Run `localdev link` first.",
+          "No .samhail.json found or no links configured. Run `samhail link` first.",
         detail: "Nothing to do.",
       };
     }
@@ -40,7 +40,7 @@ export const startCommand = defineLocaldevCommand({
       return {
         status: "error",
         message: `Package directory not found for "${missingPackage.name}": ${missingPackage.packageDir}`,
-        detail: "Fix your .localdev.json and try again.",
+        detail: "Fix your .samhail.json and try again.",
       };
     }
 
@@ -49,13 +49,13 @@ export const startCommand = defineLocaldevCommand({
     if (sessionState.state === "already-running") {
       return {
         status: "error",
-        message: `Another localdev session is already running (PID ${sessionState.pid}).`,
-        detail: "Stop it first or remove .localdev.lock.",
+        message: `Another samhail session is already running (PID ${sessionState.pid}).`,
+        detail: "Stop it first or remove .samhail.lock.",
       };
     }
 
     if (sessionState.state === "cleanup-stale") {
-      p.log.warn("Cleaning up stale .localdev.lock from a previous session.");
+      p.log.warn("Cleaning up stale .samhail.lock from a previous session.");
       await removeHeartbeat(cwd);
     }
 
@@ -123,7 +123,7 @@ export const startCommand = defineLocaldevCommand({
       p.log.step("Shutting down watchers...");
       await killAllWatchers(watchers);
       await removeHeartbeat(cwd);
-      p.outro("localdev stopped.");
+      p.outro("samhail stopped.");
       process.exit(0);
     };
 

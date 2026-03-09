@@ -1,9 +1,9 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-  title: "localdev",
+  title: "samhail",
   description: "Local npm package development across repos",
-  base: "/localdev/",
+  base: "/samhail/",
   head: [
     [
       "link",
@@ -19,7 +19,7 @@ export default defineConfig({
       {
         text: "Guide",
         items: [
-          { text: "Why localdev", link: "/guide/" },
+          { text: "Why samhail", link: "/guide/" },
           { text: "Getting Started", link: "/guide/getting-started" },
           { text: "CLI", link: "/guide/cli" },
           { text: "Config", link: "/guide/config" },
@@ -28,7 +28,7 @@ export default defineConfig({
       },
     ],
     socialLinks: [
-      { icon: "github", link: "https://github.com/joshhbk/localdev" },
+      { icon: "github", link: "https://github.com/joshhbk/samhail" },
     ],
   },
 });

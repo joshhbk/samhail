@@ -8,9 +8,9 @@ import {
   getPackageWatchDirs,
   resolvePackageTarget,
 } from "../shared/package-targets.js";
-import type { LocaldevConfig } from "../shared/types.js";
+import type { SamhailConfig } from "../shared/types.js";
 
-export interface LocaldevPluginOptions {
+export interface SamhailPluginOptions {
   /** Project root directory. Defaults to process.cwd() */
   cwd?: string;
 }
@@ -30,19 +30,19 @@ export function parseSpecifier(
   return null;
 }
 
-export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
+export const unplugin = createUnplugin((options?: SamhailPluginOptions) => {
   const cwd = options?.cwd ?? process.cwd();
 
-  // Raw config from .localdev.json (no heartbeat check). Used for Vite setup
-  // (optimizeDeps, watcher) so these are configured even if localdev starts
+  // Raw config from .samhail.json (no heartbeat check). Used for Vite setup
+  // (optimizeDeps, watcher) so these are configured even if samhail starts
   // after the dev server.
   const rawConfigReady = readConfig(cwd);
 
   // Cached raw config, populated in buildStart for use in sync hooks.
-  let rawConfig: LocaldevConfig | null = null;
+  let rawConfig: SamhailConfig | null = null;
 
   return {
-    name: "localdev",
+    name: "samhail",
     enforce: "pre",
 
     async buildStart() {
@@ -103,7 +103,7 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
         };
       },
       // Watch linked package dist directories so HMR picks up rebuilds.
-      // Uses raw config so the watcher is set up even if localdev starts later.
+      // Uses raw config so the watcher is set up even if samhail starts later.
       async configureServer(server) {
         const raw = await rawConfigReady;
         if (raw) {
@@ -131,13 +131,13 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
           }, 200);
         };
 
-        // Watch .localdev.json for link/unlink changes.
+        // Watch .samhail.json for link/unlink changes.
         const configPath = getConfigPath(cwd);
         server.watcher.add(configPath);
         for (const event of ["change", "add", "unlink"] as const) {
           server.watcher.on(event, (path) => {
             if (path === configPath) {
-              restartServer("localdev config changed, restarting...");
+              restartServer("samhail config changed, restarting...");
             }
           });
         }
@@ -147,7 +147,7 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
           const alive = isHeartbeatFreshSync(cwd);
           if (alive !== heartbeatWasAlive) {
             heartbeatWasAlive = alive;
-            restartServer("localdev session changed, restarting...");
+            restartServer("samhail session changed, restarting...");
           }
         }, 2000);
         server.httpServer?.on("close", () => clearInterval(heartbeatPoll));

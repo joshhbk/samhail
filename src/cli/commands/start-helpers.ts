@@ -2,11 +2,11 @@ import { access } from "node:fs/promises";
 import { resolve } from "node:path";
 import { readConfig } from "../../shared/config.js";
 import { getHeartbeatStatus } from "../../shared/heartbeat.js";
-import type { LocaldevLink } from "../../shared/types.js";
+import type { SamhailLink } from "../../shared/types.js";
 
 export interface LinkedPackageSpec {
   name: string;
-  link: LocaldevLink;
+  link: SamhailLink;
   packageDir: string;
 }
 

@@ -1,12 +1,12 @@
 # CLI
 
-All commands run via `npx localdev <command>`.
+All commands run via `npx samhail <command>`.
 
 ## `link`
 
-Interactive setup for linking a local package. Prompts you to pick a dependency, choose a local path, and select a dev command. Writes the result to `.localdev.json` and saves it to history.
+Interactive setup for linking a local package. Prompts you to pick a dependency, choose a local path, and select a dev command. Writes the result to `.samhail.json` and saves it to history.
 
-localdev looks for matching packages in sibling directories and one level deeper, so for most project layouts you'll be selecting from a list rather than typing a path.
+samhail looks for matching packages in sibling directories and one level deeper, so for most project layouts you'll be selecting from a list rather than typing a path.
 
 ## `unlink`
 
@@ -18,7 +18,7 @@ Restores packages from history. Checks that directories still exist and package 
 
 ## `start`
 
-Spawns each linked package's dev command and writes a `.localdev.lock` heartbeat file, refreshed every 5 seconds. The bundler plugin checks this file to decide whether to activate.
+Spawns each linked package's dev command and writes a `.samhail.lock` heartbeat file, refreshed every 5 seconds. The bundler plugin checks this file to decide whether to activate.
 
 One session per project. If a stale lock file exists from a previous crashed session, it's cleaned up automatically.
 

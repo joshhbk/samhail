@@ -1,8 +1,8 @@
 # Config
 
-## `.localdev.json`
+## `.samhail.json`
 
-Created by `localdev link`. The bundler plugin reads this to know what to resolve locally.
+Created by `samhail link`. The bundler plugin reads this to know what to resolve locally.
 
 ```json
 {
@@ -34,11 +34,11 @@ Paths can be relative or absolute. Relative paths resolve from the project root.
 
 ### `history`
 
-Packages previously removed with `localdev unlink`. Same shape as `links`. Used by `localdev relink` to restore entries without going through the interactive flow again.
+Packages previously removed with `samhail unlink`. Same shape as `links`. Used by `samhail relink` to restore entries without going through the interactive flow again.
 
-## `.localdev.lock`
+## `.samhail.lock`
 
-Written by `localdev start`, updated every 5 seconds. The plugin reads this to decide whether to activate.
+Written by `samhail start`, updated every 5 seconds. The plugin reads this to decide whether to activate.
 
 ```json
 {

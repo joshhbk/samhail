@@ -1,5 +1,5 @@
 /*
- * localdev docs theme
+ * samhail docs theme
  *
  * Aesthetic: utilitarian, terminal-confident, warm.
  * Lime primary, peach secondary. Outfit body, JetBrains Mono code.
@@ -179,6 +179,10 @@
   border-radius: 4px;
 }
 
+:root:not(.dark) .VPHero .actions .VPButton.brand {
+  color: #fff;
+}
+
 .VPHero .actions .VPButton.brand:hover {
   background: #d8f560;
 }
@@ -306,20 +310,40 @@
   border-color: var(--c-peach);
 }
 
+/* ---------- Homepage full-bleed ---------- */
+
+.VPPage:has(.home-page) .VPContent {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+.VPPage:has(.home-page) .container {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
 /* ---------- Scrollbar ---------- */
 
-.dark ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.dark ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: var(--vp-c-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 
 .dark ::-webkit-scrollbar-thumb {
   background: #333;
-  border-radius: 3px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {

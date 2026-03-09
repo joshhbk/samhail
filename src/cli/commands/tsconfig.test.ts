@@ -10,7 +10,7 @@ describe("tsconfig helpers", () => {
   async function makeTempDir() {
     const dir = join(
       tmpdir(),
-      `localdev-tsconfig-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      `samhail-tsconfig-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
     await mkdir(dir, { recursive: true });
     dirs.push(dir);

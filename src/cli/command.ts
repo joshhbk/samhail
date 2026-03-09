@@ -20,7 +20,7 @@ export function cancelGuard<T>(value: T | symbol): T {
   return value;
 }
 
-export function defineLocaldevCommand(
+export function defineSamhailCommand(
   options: Omit<Parameters<typeof defineCommand>[0], "run"> & {
     run?: (...args: Parameters<NonNullable<Parameters<typeof defineCommand>[0]["run"]>>) => Promise<CommandResult>;
   },

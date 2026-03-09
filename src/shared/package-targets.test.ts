@@ -21,7 +21,7 @@ describe("package-targets", () => {
   async function makeTempDir() {
     const dir = join(
       tmpdir(),
-      `localdev-targets-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      `samhail-targets-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
     await mkdir(dir, { recursive: true });
     dirs.push(dir);

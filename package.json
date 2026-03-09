@@ -1,10 +1,10 @@
 {
-  "name": "localdev",
+  "name": "samhail",
   "version": "0.1.0",
   "description": "Zero-choreography local npm package development across repos",
   "type": "module",
   "bin": {
-    "localdev": "./dist/cli/index.js"
+    "samhail": "./dist/cli/index.js"
   },
   "exports": {
     ".": {

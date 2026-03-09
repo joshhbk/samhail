@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
 import { writeHeartbeat } from "../../shared/heartbeat.js";
-import type { LocaldevLink } from "../../shared/types.js";
+import type { SamhailLink } from "../../shared/types.js";
 import {
   findMissingLinkedPackage,
   getStartSessionState,
@@ -16,7 +16,7 @@ describe("start helpers", () => {
   async function makeTempDir() {
     const dir = join(
       tmpdir(),
-      `localdev-start-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      `samhail-start-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
     await mkdir(dir, { recursive: true });
     dirs.push(dir);
@@ -26,7 +26,7 @@ describe("start helpers", () => {
   function makePackageSpec(
     name: string,
     packageDir: string,
-    link: LocaldevLink = { path: "../pkg", dev: "npm run dev" },
+    link: SamhailLink = { path: "../pkg", dev: "npm run dev" },
   ): LinkedPackageSpec {
     return { name, link, packageDir };
   }
@@ -63,7 +63,7 @@ describe("start helpers", () => {
       watching: ["@acme/ui"],
     });
     const staleTime = new Date(Date.now() - 30_000);
-    await utimes(join(dir, ".localdev.lock"), staleTime, staleTime);
+    await utimes(join(dir, ".samhail.lock"), staleTime, staleTime);
 
     expect(await getStartSessionState(dir)).toEqual({
       state: "cleanup-stale",

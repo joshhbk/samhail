@@ -1,13 +1,13 @@
-export interface LocaldevLink {
+export interface SamhailLink {
   /** Relative or absolute path to the local package directory */
   path: string;
   /** Command to run for watching/rebuilding the package */
   dev: string;
 }
 
-export interface LocaldevConfig {
-  links: Record<string, LocaldevLink>;
-  history?: Record<string, LocaldevLink>;
+export interface SamhailConfig {
+  links: Record<string, SamhailLink>;
+  history?: Record<string, SamhailLink>;
 }
 
 export type ExportCondition =

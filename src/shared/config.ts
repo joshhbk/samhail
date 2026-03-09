@@ -1,10 +1,10 @@
 import { resolve } from "node:path";
 import { readJsonFile, writeJsonFile } from "./json.js";
-import type { LocaldevConfig } from "./types.js";
+import type { SamhailConfig } from "./types.js";
 
-const CONFIG_FILENAME = ".localdev.json";
+const CONFIG_FILENAME = ".samhail.json";
 
-function isLocaldevLink(link: unknown): boolean {
+function isSamhailLink(link: unknown): boolean {
   return (
     typeof link === "object" &&
     link !== null &&
@@ -15,10 +15,10 @@ function isLocaldevLink(link: unknown): boolean {
 
 function isLinkRecord(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
-  return Object.values(value as Record<string, unknown>).every(isLocaldevLink);
+  return Object.values(value as Record<string, unknown>).every(isSamhailLink);
 }
 
-function isLocaldevConfig(value: unknown): value is LocaldevConfig {
+function isSamhailConfig(value: unknown): value is SamhailConfig {
   if (typeof value !== "object" || value === null) return false;
   const obj = value as Record<string, unknown>;
   if (!isLinkRecord(obj.links)) return false;
@@ -34,13 +34,13 @@ export function getConfigPath(projectRoot: string): string {
 
 export async function readConfig(
   projectRoot: string,
-): Promise<LocaldevConfig | null> {
-  return readJsonFile(getConfigPath(projectRoot), isLocaldevConfig);
+): Promise<SamhailConfig | null> {
+  return readJsonFile(getConfigPath(projectRoot), isSamhailConfig);
 }
 
 export async function writeConfig(
   projectRoot: string,
-  config: LocaldevConfig,
+  config: SamhailConfig,
 ): Promise<void> {
   try {
     await writeJsonFile(getConfigPath(projectRoot), config);

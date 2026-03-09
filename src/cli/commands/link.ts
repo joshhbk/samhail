@@ -1,7 +1,7 @@
 import { relative, resolve } from "node:path";
 import * as p from "@clack/prompts";
 import { readConfig, writeConfig } from "../../shared/config.js";
-import { cancelGuard, defineLocaldevCommand } from "../command.js";
+import { cancelGuard, defineSamhailCommand } from "../command.js";
 import {
   discoverLocalPackage,
   readConsumerDeps,
@@ -9,7 +9,7 @@ import {
   validateLinkedPackage,
 } from "./link-helpers.js";
 
-export const linkCommand = defineLocaldevCommand({
+export const linkCommand = defineSamhailCommand({
   meta: {
     name: "link",
     description: "Link a dependency to a local directory",
@@ -17,7 +17,7 @@ export const linkCommand = defineLocaldevCommand({
   async run() {
     const cwd = process.cwd();
 
-    p.intro("localdev link");
+    p.intro("samhail link");
 
     // Step 1 — Read consumer's package.json
     const deps = await readConsumerDeps(cwd);
@@ -168,7 +168,7 @@ export const linkCommand = defineLocaldevCommand({
     p.log.step(`Command:  ${devCommand}`);
 
     const confirmed = cancelGuard(
-      await p.confirm({ message: "Write this link to .localdev.json?" }),
+      await p.confirm({ message: "Write this link to .samhail.json?" }),
     );
 
     if (!confirmed) {

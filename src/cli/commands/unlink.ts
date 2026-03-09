@@ -1,17 +1,17 @@
 import { unlink } from "node:fs/promises";
 import * as p from "@clack/prompts";
 import { getConfigPath, readConfig, writeConfig } from "../../shared/config.js";
-import { cancelGuard, defineLocaldevCommand } from "../command.js";
+import { cancelGuard, defineSamhailCommand } from "../command.js";
 
-export const unlinkCommand = defineLocaldevCommand({
+export const unlinkCommand = defineSamhailCommand({
   meta: {
     name: "unlink",
-    description: "Remove a linked package from .localdev.json",
+    description: "Remove a linked package from .samhail.json",
   },
   async run() {
     const cwd = process.cwd();
 
-    p.intro("localdev unlink");
+    p.intro("samhail unlink");
 
     const config = await readConfig(cwd);
     const entries = config ? Object.entries(config.links) : [];
@@ -61,7 +61,7 @@ export const unlinkCommand = defineLocaldevCommand({
     if (remaining === 0 && !hasHistory) {
       await unlink(getConfigPath(cwd));
       p.outro(
-        `Unlinked ${selectedName}. No packages remain — removed .localdev.json.`,
+        `Unlinked ${selectedName}. No packages remain — removed .samhail.json.`,
       );
     } else {
       await writeConfig(cwd, config!);

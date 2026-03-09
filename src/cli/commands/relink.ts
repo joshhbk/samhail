@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 import * as p from "@clack/prompts";
 import { readConfig, writeConfig } from "../../shared/config.js";
 import { isJsonObject, readJsonFile } from "../../shared/json.js";
-import { defineLocaldevCommand } from "../command.js";
+import { defineSamhailCommand } from "../command.js";
 
 async function readPackageName(dir: string): Promise<string | null> {
   const pkg = await readJsonFile(join(dir, "package.json"), isJsonObject);
@@ -28,7 +28,7 @@ async function validateCandidate(
   return null;
 }
 
-export const relinkCommand = defineLocaldevCommand({
+export const relinkCommand = defineSamhailCommand({
   meta: {
     name: "relink",
     description: "Restore all previously linked packages from history",
@@ -36,7 +36,7 @@ export const relinkCommand = defineLocaldevCommand({
   async run() {
     const cwd = process.cwd();
 
-    p.intro("localdev relink");
+    p.intro("samhail relink");
 
     const config = await readConfig(cwd);
     const history = config?.history ?? {};
@@ -50,7 +50,7 @@ export const relinkCommand = defineLocaldevCommand({
       return {
         status: "error",
         message: "No previously linked packages to restore.",
-        detail: "Use `localdev link` to link a new package.",
+        detail: "Use `samhail link` to link a new package.",
       };
     }
 
@@ -83,7 +83,7 @@ export const relinkCommand = defineLocaldevCommand({
     if (restored.length === 0) {
       return {
         status: "error",
-        message: "Nothing relinked. Use `localdev link` to link manually.",
+        message: "Nothing relinked. Use `samhail link` to link manually.",
       };
     }
 

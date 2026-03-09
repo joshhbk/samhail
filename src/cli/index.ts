@@ -8,7 +8,7 @@ import { unlinkCommand } from "./commands/unlink.js";
 
 const main = defineCommand({
   meta: {
-    name: "localdev",
+    name: "samhail",
     version: "0.1.0",
     description: "Zero-choreography local npm package development across repos",
   },
