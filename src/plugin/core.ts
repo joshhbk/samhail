@@ -22,9 +22,7 @@ export interface LocaldevPluginOptions {
   links?: Record<string, string>;
 }
 
-function inlineLinksToConfig(
-  links: Record<string, string>,
-): LocaldevConfig {
+function inlineLinksToConfig(links: Record<string, string>): LocaldevConfig {
   const entries: Record<string, LocaldevLink> = {};
   for (const [name, path] of Object.entries(links)) {
     entries[name] = { path, dev: "" };
@@ -68,7 +66,10 @@ function watchLinkedOutputDirs(
 ) {
   for (const link of Object.values(config.links)) {
     const packageDir = resolve(cwd, link.path);
-    for (const dir of getPackageWatchDirs(packageDir, DEFAULT_EXPORT_CONDITIONS)) {
+    for (const dir of getPackageWatchDirs(
+      packageDir,
+      DEFAULT_EXPORT_CONDITIONS,
+    )) {
       watcher.add(resolve(packageDir, dir));
     }
   }
