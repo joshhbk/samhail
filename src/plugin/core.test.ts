@@ -80,8 +80,11 @@ describe("unplugin resolveId", () => {
     }
   });
 
-  async function createPlugin(cwd: string) {
-    const vitePlugin = unplugin.vite({ cwd });
+  async function createPlugin(
+    cwd: string,
+    pluginOptions?: { links?: Record<string, string> },
+  ) {
+    const vitePlugin = unplugin.vite({ cwd, ...pluginOptions });
     const plugin = Array.isArray(vitePlugin) ? vitePlugin[0] : vitePlugin;
     if (typeof plugin.buildStart === "function") {
       // @ts-expect-error — stub context + options for testing; plugin only needs to load config
@@ -148,6 +151,29 @@ describe("unplugin resolveId", () => {
     const plugin = await createPlugin(projectDir);
     const result = callResolveId(plugin, "@test/exports-conditional");
     expect(result).toBeNull();
+  });
+
+  it("resolves with inline links and no heartbeat", async () => {
+    const plugin = await createPlugin(process.cwd(), {
+      links: {
+        "@test/exports-conditional": join(FIXTURES, "pkg-exports-conditional"),
+      },
+    });
+
+    const result = callResolveId(plugin, "@test/exports-conditional");
+    expect(result).toBe(
+      join(FIXTURES, "pkg-exports-conditional", "dist/index.mjs"),
+    );
+  });
+
+  it("returns null for non-linked import with inline links", async () => {
+    const plugin = await createPlugin(process.cwd(), {
+      links: {
+        "@test/exports-conditional": join(FIXTURES, "pkg-exports-conditional"),
+      },
+    });
+
+    expect(callResolveId(plugin, "react")).toBeNull();
   });
 
   it("watches derived output roots in vite configureServer", async () => {

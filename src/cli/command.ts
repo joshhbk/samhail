@@ -22,7 +22,11 @@ export function cancelGuard<T>(value: T | symbol): T {
 
 export function defineLocaldevCommand(
   options: Omit<Parameters<typeof defineCommand>[0], "run"> & {
-    run?: (...args: Parameters<NonNullable<Parameters<typeof defineCommand>[0]["run"]>>) => Promise<CommandResult>;
+    run?: (
+      ...args: Parameters<
+        NonNullable<Parameters<typeof defineCommand>[0]["run"]>
+      >
+    ) => Promise<CommandResult>;
   },
 ) {
   const { run: originalRun, ...rest } = options;

@@ -8,11 +8,26 @@ import {
   getPackageWatchDirs,
   resolvePackageTarget,
 } from "../shared/package-targets.js";
-import type { LocaldevConfig } from "../shared/types.js";
+import type { LocaldevConfig, LocaldevLink } from "../shared/types.js";
 
 export interface LocaldevPluginOptions {
   /** Project root directory. Defaults to process.cwd() */
   cwd?: string;
+  /**
+   * Inline link map (package name → local path). When provided, the plugin
+   * resolves from these links directly — no .localdev.json, no heartbeat,
+   * no CLI required. The consumer is responsible for running their own
+   * dev watchers.
+   */
+  links?: Record<string, string>;
+}
+
+function inlineLinksToConfig(links: Record<string, string>): LocaldevConfig {
+  const entries: Record<string, LocaldevLink> = {};
+  for (const [name, path] of Object.entries(links)) {
+    entries[name] = { path, dev: "" };
+  }
+  return { links: entries };
 }
 
 export function parseSpecifier(
@@ -30,34 +45,104 @@ export function parseSpecifier(
   return null;
 }
 
+// Minimal Vite server shape used by lifecycle setup. Avoids importing vite types.
+interface ViteServerLike {
+  watcher: {
+    add(path: string): void;
+    on(event: string, callback: (path: string) => void): void;
+  };
+  config: {
+    cacheDir: string;
+    logger: { info(msg: string, opts?: { timestamp: boolean }): void };
+  };
+  restart(): Promise<void>;
+  httpServer?: { on(event: string, callback: () => void): void } | null;
+}
+
+function watchLinkedOutputDirs(
+  watcher: { add(path: string): void },
+  cwd: string,
+  config: LocaldevConfig,
+) {
+  for (const link of Object.values(config.links)) {
+    const packageDir = resolve(cwd, link.path);
+    for (const dir of getPackageWatchDirs(
+      packageDir,
+      DEFAULT_EXPORT_CONDITIONS,
+    )) {
+      watcher.add(resolve(packageDir, dir));
+    }
+  }
+}
+
+function setupCliLifecycle(server: ViteServerLike, cwd: string) {
+  let restartTimer: ReturnType<typeof setTimeout> | null = null;
+  const restartServer = (reason: string) => {
+    if (restartTimer) clearTimeout(restartTimer);
+    restartTimer = setTimeout(async () => {
+      restartTimer = null;
+      try {
+        rmSync(server.config.cacheDir, { recursive: true, force: true });
+      } catch {}
+      server.config.logger.info(reason, { timestamp: true });
+      await server.restart();
+    }, 200);
+  };
+
+  // Watch .localdev.json for link/unlink changes.
+  const configPath = getConfigPath(cwd);
+  server.watcher.add(configPath);
+  for (const event of ["change", "add", "unlink"] as const) {
+    server.watcher.on(event, (path) => {
+      if (path === configPath) {
+        restartServer("localdev config changed, restarting...");
+      }
+    });
+  }
+
+  // Poll heartbeat so Vite restarts when a CLI session starts or stops.
+  let heartbeatWasAlive = isHeartbeatFreshSync(cwd);
+  const heartbeatPoll = setInterval(() => {
+    const alive = isHeartbeatFreshSync(cwd);
+    if (alive !== heartbeatWasAlive) {
+      heartbeatWasAlive = alive;
+      restartServer("localdev session changed, restarting...");
+    }
+  }, 2000);
+  server.httpServer?.on("close", () => clearInterval(heartbeatPoll));
+}
+
 export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
   const cwd = options?.cwd ?? process.cwd();
+  const inlineConfig = options?.links
+    ? inlineLinksToConfig(options.links)
+    : null;
 
-  // Raw config from .localdev.json (no heartbeat check). Used for Vite setup
-  // (optimizeDeps, watcher) so these are configured even if localdev starts
-  // after the dev server.
-  const rawConfigReady = readConfig(cwd);
+  const rawConfigReady = inlineConfig
+    ? Promise.resolve(inlineConfig)
+    : readConfig(cwd);
 
-  // Cached raw config, populated in buildStart for use in sync hooks.
-  let rawConfig: LocaldevConfig | null = null;
+  // Cached config, populated in buildStart for use in sync hooks.
+  let rawConfig: LocaldevConfig | null = inlineConfig;
 
   return {
     name: "localdev",
     enforce: "pre",
 
     async buildStart() {
-      // Re-read config each build so webpack/rspack watch mode picks up
-      // link/unlink changes. Vite handles this via server restarts instead.
-      rawConfig = await readConfig(cwd);
-      if (typeof this.addWatchFile === "function") {
-        this.addWatchFile(getConfigPath(cwd));
+      if (inlineConfig) {
+        rawConfig = inlineConfig;
+      } else {
+        rawConfig = await readConfig(cwd);
+        if (typeof this.addWatchFile === "function") {
+          this.addWatchFile(getConfigPath(cwd));
+        }
       }
     },
 
     resolveId(id) {
-      // Resolve hooks stay sync, so the plugin uses freshness-only mtime checks
-      // here rather than the canonical async heartbeat status helper.
-      if (!rawConfig || !isHeartbeatFreshSync(cwd)) return null;
+      if (!rawConfig) return null;
+      if (!inlineConfig && !isHeartbeatFreshSync(cwd)) return null;
 
       const linkedNames = Object.keys(rawConfig.links);
       const parsed = parseSpecifier(id, linkedNames);
@@ -74,10 +159,6 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
       return target ? join(packageDir, target.distPath) : null;
     },
 
-    // esbuild: unplugin's esbuild adapter puts resolved paths into the plugin's
-    // namespace, so esbuild won't auto-load them from disk. This load hook reads
-    // the file contents for paths we resolved. Other bundlers ignore loadInclude
-    // returning false and skip this entirely.
     loadInclude(id) {
       if (!rawConfig) return false;
       const linkedNames = Object.keys(rawConfig.links);
@@ -91,8 +172,6 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
     },
 
     vite: {
-      // Exclude linked packages from dep pre-bundling so our resolveId runs.
-      // Uses raw config (no heartbeat) so this works regardless of start order.
       async config() {
         const raw = await rawConfigReady;
         if (!raw) return;
@@ -102,55 +181,16 @@ export const unplugin = createUnplugin((options?: LocaldevPluginOptions) => {
           },
         };
       },
-      // Watch linked package dist directories so HMR picks up rebuilds.
-      // Uses raw config so the watcher is set up even if localdev starts later.
+
       async configureServer(server) {
         const raw = await rawConfigReady;
         if (raw) {
-          for (const link of Object.values(raw.links)) {
-            const packageDir = resolve(cwd, link.path);
-            for (const watchDir of getPackageWatchDirs(
-              packageDir,
-              DEFAULT_EXPORT_CONDITIONS,
-            )) {
-              server.watcher.add(resolve(packageDir, watchDir));
-            }
-          }
+          watchLinkedOutputDirs(server.watcher, cwd, raw);
         }
 
-        let restartTimer: ReturnType<typeof setTimeout> | null = null;
-        const restartServer = (reason: string) => {
-          if (restartTimer) clearTimeout(restartTimer);
-          restartTimer = setTimeout(async () => {
-            restartTimer = null;
-            try {
-              rmSync(server.config.cacheDir, { recursive: true, force: true });
-            } catch {}
-            server.config.logger.info(reason, { timestamp: true });
-            await server.restart();
-          }, 200);
-        };
-
-        // Watch .localdev.json for link/unlink changes.
-        const configPath = getConfigPath(cwd);
-        server.watcher.add(configPath);
-        for (const event of ["change", "add", "unlink"] as const) {
-          server.watcher.on(event, (path) => {
-            if (path === configPath) {
-              restartServer("localdev config changed, restarting...");
-            }
-          });
+        if (!inlineConfig) {
+          setupCliLifecycle(server, cwd);
         }
-
-        let heartbeatWasAlive = isHeartbeatFreshSync(cwd);
-        const heartbeatPoll = setInterval(() => {
-          const alive = isHeartbeatFreshSync(cwd);
-          if (alive !== heartbeatWasAlive) {
-            heartbeatWasAlive = alive;
-            restartServer("localdev session changed, restarting...");
-          }
-        }, 2000);
-        server.httpServer?.on("close", () => clearInterval(heartbeatPoll));
       },
     },
   };
