@@ -1,6 +1,6 @@
 {
   "name": "samhail",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Develop local npm packages against consumer apps at the bundler level",
   "type": "module",
   "bin": {
